@@ -36,14 +36,20 @@ app.get("/signers", (req, res) => {
         });
 });
 
-// app.get("/add-city", (req, res) => {
-//     db.addCity("Damas", 109000, "SYR")
-//         .then(() => {
-//             console.log("City Added");
-//         })
-//         .catch((err) => {
-//             console.log("error", err);
-//         });
-// });
+app.post("/add", (req, res) => {
+    // res.redirect("/");
+    // req.body.id (name)
+    db.addSign("mark", "john", "sfsfsfsfsfsfsf")
+        .then(() => {
+            console.log("signer Added");
+        })
+        .catch((err) => {
+            console.log("error", err);
+        });
+});
+
+app.post("/add", (req, res) => {
+    console.log("POST");
+});
 
 app.listen(8080, () => console.log("Server is listening ...."));
