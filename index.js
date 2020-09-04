@@ -1,14 +1,30 @@
 const express = require("express");
 const app = express();
 const db = require("./db");
+const handlebars = require("express-handlebars");
 
+app.set("view engine", "hbs");
+app.engine(
+    "hbs",
+    handlebars({
+        layoutsDir: __dirname + "/views/layouts",
+        extname: "hbs",
+    })
+);
 app.use(express.static("./public"));
 
 app.get("/", (req, res) => {
-    console.log("running");
+    res.redirect("/petition");
 });
 
-app.get(/)
+app.get("/petition", (req, res) => {
+    res.render("main", { layout: "index" });
+    // res.send("petition");
+});
+
+app.get("/thanks", (req, res) => {
+    console.log("thanks");
+});
 
 // app.get("/cities", (req, res) => {
 //     db.getCities()
