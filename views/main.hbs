@@ -1,12 +1,14 @@
 <p>hello from main</p>
 
-<form method="post">
+<form method="post" name='signPetition'>
     <label for=" name">Enter your name: </label>
     <input type="text" name="fname" value="">
 
     <label for="name">Enter your Last name: </label>
     <input type="text" name="lname" value="">
-    <canvas id="canvas" width="150" height="150"></canvas>
+    <input name="signature" id='signature' type='hidden'>
 
+    <canvas id="canvas" width="200" height="100"></canvas>
+    <button id="clear">clear</button>
     <input type="submit" value="Sign!">
 </form>
