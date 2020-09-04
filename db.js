@@ -1,13 +1,13 @@
 const spicedPg = require("spiced-pg");
-var db = spicedPg("postgres:postgres:postgres@localhost:5432/cities");
+var db = spicedPg("postgres:postgres:postgres@localhost:5432/petition");
 
-module.exports.getCities = () => {
-    return db.query("SELECT * FROM cities");
+module.exports.getSigners = () => {
+    return db.query("SELECT * FROM signers");
 };
 
-module.exports.addCity = (city, pop, country) => {
+module.exports.addSign = (fname, lname, signiture) => {
     return db.query(
-        `INSERT INTO cities (city, population, country) VALUES ($1, $2, $3)`,
-        [city, pop, country]
+        `INSERT INTO signers (first_name, last_name, signiture) VALUES ($1, $2, $3)`,
+        [fname, lname, signiture]
     );
 };

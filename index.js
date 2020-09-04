@@ -26,15 +26,15 @@ app.get("/thanks", (req, res) => {
     console.log("thanks");
 });
 
-// app.get("/cities", (req, res) => {
-//     db.getCities()
-//         .then(({ rows }) => {
-//             console.log(rows);
-//         })
-//         .catch((err) => {
-//             console.log("error", err);
-//         });
-// });
+app.get("/signers", (req, res) => {
+    db.getSigners()
+        .then(({ rows }) => {
+            console.log(rows);
+        })
+        .catch((err) => {
+            console.log("error", err);
+        });
+});
 
 // app.get("/add-city", (req, res) => {
 //     db.addCity("Damas", 109000, "SYR")

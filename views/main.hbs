@@ -2,13 +2,14 @@
 
 <form method="post" name='signPetition'>
     <label for=" name">Enter your name: </label>
-    <input type="text" name="fname" value="">
+    <input type="text" name="fname" value="" required="true">
 
     <label for="name">Enter your Last name: </label>
-    <input type="text" name="lname" value="">
-    <input name="signature" id='signature' type='hidden'>
+    <input type="text" name="lname" value="" required="true">
 
-    <canvas id="canvas" width="200" height="100"></canvas>
+    <input name="signature" id='signature' type='hidden' required="true">
+    <canvas id="canvas" width="500" height="150"></canvas>
+
     <button id="clear">clear</button>
     <input type="submit" value="Sign!">
 </form>
