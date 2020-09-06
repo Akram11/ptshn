@@ -24,13 +24,30 @@ app.get("/petition", (req, res) => {
 });
 
 app.get("/thanks", (req, res) => {
-    res.render("thanks", { layout: "index" });
+    const fname = req.query.fname;
+    db.getTotal()
+        .then(({ rows }) => {
+            console.log("Total", rows[0].count);
+            res.render("thanks", {
+                total: rows[0].count,
+                signer: {
+                    fname: fname,
+                },
+                layout: "index",
+            });
+        })
+        .catch((err) => {
+            console.error(err);
+        });
 });
 
 app.get("/signers", (req, res) => {
     db.getSigners()
         .then(({ rows }) => {
-            console.log(rows);
+            res.render("signers", {
+                layout: "index",
+                rows,
+            });
         })
         .catch((err) => {
             console.log("error", err);
@@ -39,7 +56,6 @@ app.get("/signers", (req, res) => {
 
 app.post("/petition", (req, res) => {
     const { fname, lname, signature } = req.body;
-    console.log(fname, lname, signature);
     db.addSignature(fname, lname, signature)
         .then(() => {
             console.log("signer Added");
@@ -47,7 +63,7 @@ app.post("/petition", (req, res) => {
         .catch((err) => {
             console.log("error", err);
         });
-    res.redirect("/thanks");
+    res.redirect(`/thanks?fname=${fname}`);
 });
 
 app.listen(8080, () => console.log("Server is listening ...."));
