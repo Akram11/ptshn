@@ -36,10 +36,11 @@ app.get("/signers", (req, res) => {
         });
 });
 
-app.post("/add", (req, res) => {
+app.post("/petition", (req, res) => {
     // res.redirect("/");
-    // req.body.id (name)
-    db.addSign("mark", "john", "sfsfsfsfsfsfsf")
+    console.log(req.body);
+    // console.log(req);
+    db.addSignature("mark", "john", "sfsfsfsfsfsfsf")
         .then(() => {
             console.log("signer Added");
         })
@@ -48,8 +49,8 @@ app.post("/add", (req, res) => {
         });
 });
 
-app.post("/add", (req, res) => {
-    console.log("POST");
-});
+// app.post("/add", (req, res) => {
+//     console.log("POST");
+// });
 
 app.listen(8080, () => console.log("Server is listening ...."));

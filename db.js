@@ -5,7 +5,7 @@ module.exports.getSigners = () => {
     return db.query("SELECT * FROM signers");
 };
 
-module.exports.addSign = (fname, lname, signature) => {
+module.exports.addSignature = (fname, lname, signature) => {
     return db.query(
         `INSERT INTO signers (first_name, last_name, signature) VALUES ($1, $2, $3)`,
         [fname, lname, signature]
