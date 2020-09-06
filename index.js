@@ -11,6 +11,8 @@ app.engine(
         extname: "hbs",
     })
 );
+
+app.use(express.urlencoded({ extended: false }));
 app.use(express.static("./public"));
 
 app.get("/", (req, res) => {
@@ -19,11 +21,10 @@ app.get("/", (req, res) => {
 
 app.get("/petition", (req, res) => {
     res.render("main", { layout: "index" });
-    // res.send("petition");
 });
 
 app.get("/thanks", (req, res) => {
-    console.log("thanks");
+    res.render("thanks", { layout: "index" });
 });
 
 app.get("/signers", (req, res) => {
@@ -37,20 +38,16 @@ app.get("/signers", (req, res) => {
 });
 
 app.post("/petition", (req, res) => {
-    // res.redirect("/");
-    console.log(req.body);
-    // console.log(req);
-    db.addSignature("mark", "john", "sfsfsfsfsfsfsf")
+    const { fname, lname, signature } = req.body;
+    console.log(fname, lname, signature);
+    db.addSignature(fname, lname, signature)
         .then(() => {
             console.log("signer Added");
         })
         .catch((err) => {
             console.log("error", err);
         });
+    res.redirect("/thanks");
 });
-
-// app.post("/add", (req, res) => {
-//     console.log("POST");
-// });
 
 app.listen(8080, () => console.log("Server is listening ...."));

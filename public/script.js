@@ -23,17 +23,15 @@ function doDrawing(e) {
         ctx.strokeStyle = "black";
         ctx.lineTo(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop);
         ctx.stroke();
-        console.log(dataURL);
     }
 }
 
 function endDrawing() {
     drawing = false;
+    $("#signature").val(canvas.toDataURL());
 }
 
 $("#clear").click((e) => {
     e.preventDefault();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 });
-
-let dataURL = canvas.toDataURL();
