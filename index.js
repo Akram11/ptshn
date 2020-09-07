@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const db = require("./db");
 const handlebars = require("express-handlebars");
+const cookieSession = require("cookie-session");
 
 app.set("view engine", "hbs");
 app.engine(
@@ -9,6 +10,13 @@ app.engine(
     handlebars({
         layoutsDir: __dirname + "/views/layouts",
         extname: "hbs",
+    })
+);
+
+app.use(
+    cookieSession({
+        secret: "oh la la, very secretive line",
+        maxAge: 24 * 60 * 60 * 1000,
     })
 );
 
@@ -20,18 +28,22 @@ app.get("/", (req, res) => {
 });
 
 app.get("/petition", (req, res) => {
+    console.log("req.session: ", req.session.secret);
+
     res.render("main", { layout: "index" });
 });
 
 app.get("/thanks", (req, res) => {
+    console.log(req.session.signatureId);
     const fname = req.query.fname;
-    db.getTotal()
+    db.getSigTotal(req.session.signatureId)
         .then(({ rows }) => {
-            console.log("Total", rows[0].count);
+            console.log("_++++++++++>>>>>", rows);
             res.render("thanks", {
-                total: rows[0].count,
+                total: rows[0].total,
                 signer: {
-                    fname: fname,
+                    fname: rows[0].first_name,
+                    signature: rows[0].signature,
                 },
                 layout: "index",
             });
@@ -57,13 +69,13 @@ app.get("/signers", (req, res) => {
 app.post("/petition", (req, res) => {
     const { fname, lname, signature } = req.body;
     db.addSignature(fname, lname, signature)
-        .then(() => {
-            console.log("signer Added");
+        .then(({ rows }) => {
+            req.session.signatureId = rows[0].id;
+            res.redirect(`/thanks?fname=${fname}`);
         })
         .catch((err) => {
             console.log("error", err);
         });
-    res.redirect(`/thanks?fname=${fname}`);
 });
 
 app.listen(8080, () => console.log("Server is listening ...."));

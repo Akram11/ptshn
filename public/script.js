@@ -22,6 +22,8 @@ function doDrawing(e) {
     if (drawing) {
         ctx.strokeStyle = "black";
         ctx.lineTo(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop);
+        ctx.lineWidth = 3;
+
         ctx.stroke();
     }
 }
