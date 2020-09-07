@@ -3,6 +3,7 @@ const app = express();
 const db = require("./db");
 const handlebars = require("express-handlebars");
 const cookieSession = require("cookie-session");
+const csurf = require("csurf");
 
 app.set("view engine", "hbs");
 app.engine(
@@ -21,6 +22,12 @@ app.use(
 );
 
 app.use(express.urlencoded({ extended: false }));
+app.use(csurf());
+app.use(function (req, res, next) {
+    res.locals.csrfToken = req.csrfToken();
+    res.setHeader("x-frame-options", "deny");
+    next();
+});
 app.use(express.static("./public"));
 
 app.get("/", (req, res) => {
