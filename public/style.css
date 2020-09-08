@@ -57,3 +57,7 @@ canvas {
 label {
     display: block;
 }
+
+input {
+    caret-color: red;
+}

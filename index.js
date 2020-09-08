@@ -34,6 +34,12 @@ app.get("/", (req, res) => {
     res.redirect("/petition");
 });
 
+app.get("/register", (req, res) => {
+    res.render("register", {
+        layout: "index",
+    });
+});
+
 app.get("/petition", (req, res) => {
     req.session.signatureId
         ? res.redirect("/thanks")
