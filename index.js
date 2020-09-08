@@ -68,7 +68,7 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
     const { email, pwd } = req.body;
     console.log(email);
-    db.getUser(email).then(({ rows }) => {
+    db.getUserEmail(email).then(({ rows }) => {
         // console.log(rows[0].hash, email, password);
         if (rows.length === 0) {
             return;
@@ -98,12 +98,11 @@ app.get("/thanks", (req, res) => {
     if (!req.session.signatureId) {
         res.redirect("/petition");
     } else {
-        db.getSigTotal(req.session.signatureId)
+        db.getSigTotal(req.session.userId)
             .then(({ rows }) => {
                 res.render("thanks", {
                     total: rows[0].total,
                     signer: {
-                        fname: rows[0].first_name,
                         signature: rows[0].signature,
                     },
                     layout: "index",
@@ -133,15 +132,18 @@ app.get("/signers", (req, res) => {
 });
 
 app.post("/petition", (req, res) => {
-    const { fname, lname, signature } = req.body;
-    db.addSignature(fname, lname, signature)
-        .then(({ rows }) => {
-            req.session.signatureId = rows[0].id;
-            res.redirect(`/thanks`);
-        })
-        .catch((err) => {
-            console.log("error", err);
-        });
+    const { signature } = req.body;
+    db.getUser(req.session.userId).then(({ rows }) => {
+        console.log(rows[0]);
+        db.addSignature(signature, req.session.userId)
+            .then(({ rows }) => {
+                req.session.signatureId = rows[0].id;
+                res.redirect(`/thanks`);
+            })
+            .catch((err) => {
+                console.log("error", err);
+            });
+    });
 });
 
 app.listen(8080, () => console.log("Server is listening ...."));
