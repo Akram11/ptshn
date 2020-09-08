@@ -8,8 +8,16 @@ CREATE TABLE signers
     signature TEXT NOT NULL CHECK (signature != '')
 );
 
-INSERT INTO signers
-    (first_name, last_name, signature)
-VALUES
-    ('Atlas', 'bida', 'fsfeslfksjlfkjasldfjs;lkfj');
 
+
+DROP TABLE IF EXISTS users;
+
+CREATE TABLE users
+(
+    id SERIAL PRIMARY KEY,
+    first VARCHAR NOT NULL,
+    last VARCHAR NOT NULL,
+    email VARCHAR NOT NULL UNIQUE,
+    password VARCHAR NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
