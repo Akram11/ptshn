@@ -4,6 +4,7 @@ const db = require("./db");
 const handlebars = require("express-handlebars");
 const cookieSession = require("cookie-session");
 const csurf = require("csurf");
+const bc = require("./bc");
 
 app.set("view engine", "hbs");
 app.engine(
@@ -36,6 +37,29 @@ app.get("/", (req, res) => {
 
 app.get("/register", (req, res) => {
     res.render("register", {
+        layout: "index",
+    });
+});
+
+app.post("/register", (req, res) => {
+    const { fname, lname, email, pwd } = req.body;
+    bc.hash(pwd)
+        .then((hash) => {
+            db.addUser(fname, lname, email, pwd, hash)
+                .then((id) => {
+                    console.log(id);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+});
+
+app.get("/login", (req, res) => {
+    res.render("login", {
         layout: "index",
     });
 });

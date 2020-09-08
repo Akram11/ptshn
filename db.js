@@ -27,3 +27,10 @@ module.exports.getSigTotal = (id) => {
         `SELECT first_name, signature, (select count(id) from signers) as total FROM signers where id = ${id}`
     );
 };
+
+module.exports.addUser = (fname, lname, email, hpwd) => {
+    return db.query(
+        `INSERT INTO users (first, last, email, password) VALUES ($1, $2, $3, $4) returning id`,
+        [fname, lname, email, hpwd]
+    );
+};

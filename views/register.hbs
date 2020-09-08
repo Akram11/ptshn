@@ -9,7 +9,7 @@
     <input type="email" name="email" placeholder="mark@example.com" required>
 
     <label for="pwd">Password</label>
-    <input type="password" name="pwd" required>
+    <input type="password" name="pwd" minlength="6" required>
 
     <button type="submit" class="submit" value="submit">Register</button>
     <input type="hidden" name="_csrf" value="{{csrfToken}}">

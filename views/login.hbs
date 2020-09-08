@@ -1,0 +1,10 @@
+<form method="post">
+    <label for="email">E-mail address</label>
+    <input type="email" name="email" placeholder="mark@example.com" required>
+
+    <label for="pwd">Password</label>
+    <input type="password" name="pwd" required>
+
+    <button type="submit" class="submit" value="submit">login</button>
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+</form>
