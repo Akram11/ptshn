@@ -36,7 +36,15 @@ app.get("/", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
+    req.session.userId;
     res.render("register", {
+        layout: "index",
+    });
+});
+
+app.get("/profile", (req, res) => {
+    // req.session.userId;
+    res.render("profile", {
         layout: "index",
     });
 });
@@ -133,17 +141,15 @@ app.get("/signers", (req, res) => {
 
 app.post("/petition", (req, res) => {
     const { signature } = req.body;
-    db.getUser(req.session.userId).then(({ rows }) => {
-        console.log(rows[0]);
-        db.addSignature(signature, req.session.userId)
-            .then(({ rows }) => {
-                req.session.signatureId = rows[0].id;
-                res.redirect(`/thanks`);
-            })
-            .catch((err) => {
-                console.log("error", err);
-            });
-    });
+
+    db.addSignature(signature, req.session.userId)
+        .then(({ rows }) => {
+            req.session.signatureId = rows[0].id;
+            res.redirect(`/thanks`);
+        })
+        .catch((err) => {
+            console.log("error", err);
+        });
 });
 
 app.listen(8080, () => console.log("Server is listening ...."));

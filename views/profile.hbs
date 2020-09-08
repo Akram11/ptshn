@@ -1,0 +1,17 @@
+<form method="post">
+    <label for="age">Age</label>
+    <input type="number" name="age" value="">
+
+
+    <label for="city">City</label>
+    <input type="text" name="city" pattern="[A-Za-z]+">
+
+    <label for="url">Homepage</label>
+    <input type="url" name="url" placeholder="https://example.com">
+
+    <label for="pwd">Password</label>
+    <input type="password" name="pwd" minlength="6" required>
+
+    <button type="submit" class="submit" value="submit">continue</button>
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+</form>
