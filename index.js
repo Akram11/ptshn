@@ -45,9 +45,10 @@ app.post("/register", (req, res) => {
     const { fname, lname, email, pwd } = req.body;
     bc.hash(pwd)
         .then((hash) => {
-            db.addUser(fname, lname, email, pwd, hash)
-                .then((id) => {
-                    console.log(id);
+            db.addUser(fname, lname, email, hash)
+                .then(({ rows }) => {
+                    req.session.userId = rows[0].id;
+                    res.redirect(`/`);
                 })
                 .catch((err) => {
                     console.log(err);
@@ -64,10 +65,33 @@ app.get("/login", (req, res) => {
     });
 });
 
+app.post("/login", (req, res) => {
+    const { email, pwd } = req.body;
+    console.log(email);
+    db.getUser(email).then(({ rows }) => {
+        // console.log(rows[0].hash, email, password);
+        if (rows.length === 0) {
+            return;
+            //do something email doen't exist
+        } else {
+            bc.compare(pwd, rows[0].hash).then((result) => {
+                if (!result) {
+                    return;
+                    //do somethin password is wrong
+                } else {
+                    req.session.userId = rows[0].id;
+                    res.redirect(`/petition`);
+                }
+            });
+        }
+    });
+});
+
 app.get("/petition", (req, res) => {
-    req.session.signatureId
-        ? res.redirect("/thanks")
-        : res.render("main", { layout: "index" });
+    // req.session.userId
+    //     ? res.redirect("/thanks")
+    // :
+    res.render("main", { layout: "index" });
 });
 
 app.get("/thanks", (req, res) => {
@@ -95,7 +119,7 @@ app.get("/signers", (req, res) => {
     if (!req.session.signatureId) {
         res.redirect("/petition");
     } else {
-        db.getSigners()
+        db.getSignatures()
             .then(({ rows }) => {
                 res.render("signers", {
                     layout: "index",
