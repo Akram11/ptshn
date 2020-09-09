@@ -36,10 +36,13 @@ app.get("/", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
-    req.session.userId;
-    res.render("register", {
-        layout: "index",
-    });
+    if (req.session.userId) {
+        res.redirect("/profile");
+    } else {
+        res.render("register", {
+            layout: "index",
+        });
+    }
 });
 
 app.get("/profile", (req, res) => {
@@ -71,17 +74,27 @@ app.post("/register", (req, res) => {
                 })
                 .catch((err) => {
                     console.log(err);
+                    res.render("register", {
+                        layout: "index",
+                    });
                 });
         })
         .catch((err) => {
+            res.render("register", {
+                layout: "index",
+            });
             console.log(err);
         });
 });
 
 app.get("/login", (req, res) => {
-    res.render("login", {
-        layout: "index",
-    });
+    if (req.session.userId) {
+        res.redirect("/profile");
+    } else {
+        res.render("login", {
+            layout: "index",
+        });
+    }
 });
 
 app.post("/login", (req, res) => {
@@ -99,7 +112,7 @@ app.post("/login", (req, res) => {
                     //do somethin password is wrong
                 } else {
                     req.session.userId = rows[0].id;
-                    res.redirect(`/petition`);
+                    res.redirect(`/profile`);
                 }
             });
         }
