@@ -1,5 +1,8 @@
 const spicedPg = require("spiced-pg");
-var db = spicedPg("postgres:postgres:postgres@localhost:5432/petition");
+var db = spicedPg(
+    process.env.DATABASE_URL ||
+        "postgres:postgres:postgres@localhost:5432/petition"
+);
 
 module.exports.getSignatures = () => {
     return db.query("SELECT * FROM signatures");
@@ -37,3 +40,12 @@ module.exports.getUserEmail = (mail) => {
 module.exports.getUser = (id) => {
     return db.query(`SELECT first, last FROM users WHERE id = $1`, [id]);
 };
+
+module.exports.insertProfile = (age, city, url, userId) => {
+    return db.query(
+        `INSERT INTO user_profiles (age, city, url, user_id) VALUES ($1, $2, $3, $4) returning id`,
+        [age || null, city || null, url || null, userId]
+    );
+};
+
+// select users.id, users.first, users.last, user_profiles.city, user_profiles.age, user_profiles.url, user_profiles.user_id, signatures.user_id as sigid from users join signatures on users.id = signatures.user_id left JOIN user_profiles on users.id = user_profiles.user_id;

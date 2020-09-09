@@ -43,10 +43,21 @@ app.get("/register", (req, res) => {
 });
 
 app.get("/profile", (req, res) => {
-    // req.session.userId;
     res.render("profile", {
         layout: "index",
     });
+});
+
+app.post("/profile", (req, res) => {
+    const { city, age, url } = req.body;
+    console.log(req.session.userId, city, age, url);
+    db.insertProfile(age, city, url, req.session.userId)
+        .then(() => {
+            res.redirect("/petition");
+        })
+        .catch((err) => {
+            console.error(err);
+        });
 });
 
 app.post("/register", (req, res) => {
@@ -56,7 +67,7 @@ app.post("/register", (req, res) => {
             db.addUser(fname, lname, email, hash)
                 .then(({ rows }) => {
                     req.session.userId = rows[0].id;
-                    res.redirect(`/`);
+                    res.redirect(`/profile`);
                 })
                 .catch((err) => {
                     console.log(err);
@@ -108,8 +119,9 @@ app.get("/thanks", (req, res) => {
     } else {
         db.getSigTotal(req.session.userId)
             .then(({ rows }) => {
+                console.log(req.session.userId, rows);
                 res.render("thanks", {
-                    total: rows[0].total,
+                    // total: rows[0].total,
                     signer: {
                         signature: rows[0].signature,
                     },
@@ -152,4 +164,14 @@ app.post("/petition", (req, res) => {
         });
 });
 
-app.listen(8080, () => console.log("Server is listening ...."));
+app.listen(process.env.PORT || 8080, () =>
+    console.log("Server is listening ....")
+);
+
+//  TODO //////////////////////////////////////////////////////////////////
+// ** HANDL ERRORS ON: **
+//      -login
+//      -register
+//
+// ** SERVER SIDE VALIDATION **
+// ** CLIENT SIDE VALIDATION **
