@@ -194,6 +194,7 @@ app.get("/signers", (req, res) => {
     } else {
         db.getSignatures()
             .then(({ rows }) => {
+                // console.log(rows);
                 res.render("signers", {
                     layout: "index",
                     rows,

@@ -5,7 +5,15 @@ var db = spicedPg(
 );
 
 module.exports.getSignatures = () => {
-    return db.query("SELECT * FROM signatures");
+    // return db.query("SELECT * FROM signatures");
+    return db.query(`SELECT users.first, users.last, user_profiles.age, user_profiles.city, user_profiles.url, users.created_at
+     FROM signatures 
+     LEFT JOIN users ON
+     users.id = signatures.user_id 
+     LEFT JOIN user_profiles ON 
+     signatures.user_id = user_profiles.user_id 
+     ORDER BY users.created_at
+`);
 };
 
 module.exports.addSignature = (signature, userId) => {

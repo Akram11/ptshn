@@ -1,7 +1,12 @@
 <div>
     <p>signers</p>
     {{#each rows}}
-    {{id}}
+    {{#if url}}
+    <div> <a href="{{url}}">{{last}}, {{first}}</a> {{age}}, <a href="/{{city}}">{{city}}</a></div>
+    {{else}}
+    <p> {{first}} {{last}} {{age}} <a href="/city">{{city}}</a></p>
+    {{/if}}
+
     {{/each}}
 
 </div>
