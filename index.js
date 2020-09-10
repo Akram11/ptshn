@@ -69,6 +69,7 @@ app.get("/register", (req, res) => {
 });
 
 app.get("/profile", (req, res) => {
+    console.log("insideprofile", req.session.signed);
     if (req.session.userId) {
         res.render("profile", {
             layout: "index",
@@ -142,11 +143,15 @@ app.post("/login", (req, res) => {
                 if (!result) {
                     res.render("login", {
                         layout: "index",
-                        msg: "user doesn't exist",
+                        msg: "pass is wrong",
                     });
                 } else {
                     req.session.userId = rows[0].id;
-                    res.redirect(`/profile`);
+                    db.isSigned(req.session.userId).then(({ rows }) => {
+                        req.session.signed = rows.length == 0 ? false : true;
+                        console.log(":req.session.signed", req.session.signed);
+                        res.redirect(`/profile`);
+                    });
                     //do a query to check if the user has signed
                 }
             });
@@ -203,7 +208,7 @@ app.get("/signers", (req, res) => {
 app.post("/petition", (req, res) => {
     const { signature } = req.body;
     db.addSignature(signature, req.session.userId)
-        .then(({ rows }) => {
+        .then(() => {
             req.session.signed = true;
             res.redirect(`/thanks`);
         })
