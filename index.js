@@ -194,7 +194,7 @@ app.get("/signers", (req, res) => {
     } else {
         db.getSignatures()
             .then(({ rows }) => {
-                // console.log(rows);
+                console.log(rows);
                 res.render("signers", {
                     layout: "index",
                     rows,
@@ -204,6 +204,16 @@ app.get("/signers", (req, res) => {
                 console.log("error", err);
             });
     }
+});
+app.get("/signers/:city", (res, req) => {
+    const city = req.req.params.city;
+    db.getUsersByCity(city).then(({ rows }) => {
+        // console.log(rows);
+        res.res.render("signers", {
+            layout: "index",
+            rows,
+        });
+    });
 });
 
 app.post("/petition", (req, res) => {
@@ -218,13 +228,19 @@ app.post("/petition", (req, res) => {
         });
 });
 
+// app.get("/city/:id", (res, req) => {
+//     // res.end(req.params.city);~
+//     console.log(req.params);
+// });
+
+// app.use((req, res, next) => {
+//     res.status(404).send("Unable to find the requested resource!");
+// });
+
 app.listen(process.env.PORT || 8080, () =>
     console.log("Server is listening ....")
 );
 
-app.use(function (req, res, next) {
-    res.status(404).send("Unable to find the requested resource!");
-});
 //  TODO //////////////////////////////////////////////////////////////////
 // ** HANDL ERRORS ON: **
 //      -login

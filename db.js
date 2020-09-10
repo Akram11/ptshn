@@ -60,4 +60,16 @@ module.exports.isSigned = (user_id) => {
     return db.query(`SELECT id FROM signatures where user_id = $1`, [user_id]);
 };
 
+module.exports.getUsersByCity = (city) => {
+    return db.query(
+        `SELECT users.first, users.last, user_profiles.age, user_profiles.url
+         FROM users join user_profiles 
+         ON users.id = user_profiles.user_id 
+         JOIN signatures 
+         ON users.id = signatures.user_id 
+         WHERE user_profiles.city = $1`,
+        [city]
+    );
+};
+
 // select users.id, users.first, users.last, user_profiles.city, user_profiles.age, user_profiles.url, user_profiles.user_id, signatures.user_id as sigid from users join signatures on users.id = signatures.user_id left JOIN user_profiles on users.id = user_profiles.user_id;
