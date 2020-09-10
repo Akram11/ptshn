@@ -31,10 +31,29 @@ app.use(function (req, res, next) {
 });
 app.use(express.static("./public"));
 
-app.use(function (req, res, next) {
-    res.status(404).send("Unable to find the requested resource!");
-});
+// app.use("/auth", (req, res, next) => {
+//     if (req.session.userId) {
+//         res.redirect("/petition");
+//     } else {
+//         next();
+//     }
+// });
 
+//
+// const requireLoggedOut = (req, res, next) => {
+//     if (req.session.userId) {
+//         res.redirect("/petition");
+//     } else {
+//         next();
+//     }
+// };
+// const requireSig = (req, res, next) => {
+//     if (req.session.signatureId) {
+//         res.redirect("/thanks");
+//     } else {
+//         next();
+//     }
+// };
 app.get("/", (req, res) => {
     res.redirect("/petition");
 });
@@ -50,9 +69,13 @@ app.get("/register", (req, res) => {
 });
 
 app.get("/profile", (req, res) => {
-    res.render("profile", {
-        layout: "index",
-    });
+    if (req.session.userId) {
+        res.render("profile", {
+            layout: "index",
+        });
+    } else {
+        res.redirect("register");
+    }
 });
 
 app.post("/profile", (req, res) => {
@@ -71,7 +94,7 @@ app.post("/register", (req, res) => {
     const { fname, lname, email, pwd } = req.body;
     bc.hash(pwd)
         .then((hash) => {
-            db.addUser(fname, lname, email, hash)
+            db.addUser(fname, lname, email.toLowerCase(), hash)
                 .then(({ rows }) => {
                     req.session.userId = rows[0].id;
                     res.redirect(`/profile`);
@@ -80,6 +103,7 @@ app.post("/register", (req, res) => {
                     console.log(err);
                     res.render("register", {
                         layout: "index",
+                        msg: "somthing went wrong!",
                     });
                 });
         })
@@ -107,16 +131,23 @@ app.post("/login", (req, res) => {
     db.getUserEmail(email).then(({ rows }) => {
         // console.log(rows[0].hash, email, password);
         if (rows.length === 0) {
-            return;
+            // return;
             //do something email doen't exist
+            res.render("login", {
+                layout: "index",
+                msg: "user doesn't exist",
+            });
         } else {
             bc.compare(pwd, rows[0].hash).then((result) => {
                 if (!result) {
-                    return;
-                    //do somethin password is wrong
+                    res.render("login", {
+                        layout: "index",
+                        msg: "user doesn't exist",
+                    });
                 } else {
                     req.session.userId = rows[0].id;
                     res.redirect(`/profile`);
+                    //do a query to check if the user has signed
                 }
             });
         }
@@ -124,21 +155,20 @@ app.post("/login", (req, res) => {
 });
 
 app.get("/petition", (req, res) => {
-    // req.session.userId
-    //     ? res.redirect("/thanks")
-    // :
-    res.render("main", { layout: "index" });
+    req.session.userId
+        ? res.render("main", { layout: "index" })
+        : res.redirect("/register");
 });
 
 app.get("/thanks", (req, res) => {
-    if (!req.session.signatureId) {
+    if (!req.session.userId) {
         res.redirect("/petition");
     } else {
         db.getSigTotal(req.session.userId)
             .then(({ rows }) => {
-                console.log(req.session.userId, rows);
+                // console.log(req.session.userId, rows);
                 res.render("thanks", {
-                    // total: rows[0].total,
+                    total: rows[0].total,
                     signer: {
                         signature: rows[0].signature,
                     },
@@ -152,7 +182,7 @@ app.get("/thanks", (req, res) => {
 });
 
 app.get("/signers", (req, res) => {
-    if (!req.session.signatureId) {
+    if (!req.session.userId) {
         res.redirect("/petition");
     } else {
         db.getSignatures()
@@ -170,10 +200,10 @@ app.get("/signers", (req, res) => {
 
 app.post("/petition", (req, res) => {
     const { signature } = req.body;
-
     db.addSignature(signature, req.session.userId)
         .then(({ rows }) => {
-            req.session.signatureId = rows[0].id;
+            console.log("XXXXXXXXXXX", rows);
+            req.session.signed = true;
             res.redirect(`/thanks`);
         })
         .catch((err) => {
@@ -185,6 +215,9 @@ app.listen(process.env.PORT || 8080, () =>
     console.log("Server is listening ....")
 );
 
+app.use(function (req, res, next) {
+    res.status(404).send("Unable to find the requested resource!");
+});
 //  TODO //////////////////////////////////////////////////////////////////
 // ** HANDL ERRORS ON: **
 //      -login

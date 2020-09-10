@@ -10,7 +10,7 @@ module.exports.getSignatures = () => {
 
 module.exports.addSignature = (signature, userId) => {
     return db.query(
-        `INSERT INTO signatures (signature, user_id) VALUES ($1, $2) returning id`,
+        `INSERT INTO signatures (signature, user_id) VALUES ($1, $2) returning user_id`,
         [signature, userId]
     );
 };
@@ -18,7 +18,7 @@ module.exports.addSignature = (signature, userId) => {
 module.exports.getSigTotal = (userId) => {
     return db.query(
         `SELECT signature, (select count(id) from signatures) as total
-         FROM signatures where id = $1`,
+         FROM signatures where user_id = $1`,
         [userId]
     );
 };
