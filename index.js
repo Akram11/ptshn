@@ -156,7 +156,9 @@ app.post("/login", (req, res) => {
 
 app.get("/petition", (req, res) => {
     req.session.userId
-        ? res.render("main", { layout: "index" })
+        ? req.session.signed
+            ? res.redirect("/thanks")
+            : res.render("main", { layout: "index" })
         : res.redirect("/register");
 });
 
@@ -202,7 +204,6 @@ app.post("/petition", (req, res) => {
     const { signature } = req.body;
     db.addSignature(signature, req.session.userId)
         .then(({ rows }) => {
-            console.log("XXXXXXXXXXX", rows);
             req.session.signed = true;
             res.redirect(`/thanks`);
         })
