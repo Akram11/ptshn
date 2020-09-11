@@ -85,6 +85,24 @@ module.exports.updateUser = (first, last, email, id) => {
     );
 };
 
+module.exports.updateUser = (first, last, email, id) => {
+    return db.query(
+        `UPDATE users
+         SET first = $1, last = $2, email = $3
+         WHERE id = $4`,
+        [first, last, email, id]
+    );
+};
+
+module.exports.updateUserPwd = (first, last, email, pwd, id) => {
+    return db.query(
+        `UPDATE users
+         SET first = $1, last = $2, email = $3, password = $4
+         WHERE id = $5`,
+        [first, last, email, pwd, id]
+    );
+};
+
 module.exports.updateProfile = (age, city, url, user_id) => {
     return db.query(
         `INSERT INTO user_profiles (age, city, url, user_id)
@@ -96,13 +114,5 @@ module.exports.updateProfile = (age, city, url, user_id) => {
     );
 };
 
-// module.exports.updateUser = ()
-
-// module.exports.insertProfile = (age, city, url, userId) => {
-//     return db.query(
-//         `INSERT INTO user_profiles (age, city, url, user_id) VALUES ($1, $2, $3, $4)`,
-//         [age || null, city || null, url || null, userId]
-//     );
-// };
-
-// UPDATE users set first = 'james', last = 'boned', email = 'boned@gmail.com' where id = 1
+//*********************** TODO********************************
+// nice to have : adding, updating a user can be done with an upsert!

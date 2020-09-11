@@ -237,16 +237,36 @@ app.get("/profile/edit", (req, res) => {
 });
 
 app.post("/profile/edit", (req, res) => {
-    const { fname, lname, email, age, city, url } = req.body;
-    // const{first, last, email}
-    console.log("werwrwrwre", fname, lname, email);
-    db.updateUser(fname, lname, email, req.session.userId)
-        .then(() => {
-            db.updateProfile(age, city, url, req.session.userId).then(() => {
-                res.redirect("/profile/edit");
-            });
-        })
-        .catch((err) => console.log(err));
+    const { fname, lname, email, age, city, url, pwd } = req.body;
+    if (pwd) {
+        bc.hash(pwd)
+            .then((hash) => {
+                db.updateUserPwd(
+                    fname,
+                    lname,
+                    email,
+                    hash,
+                    req.session.userId
+                ).then(() => {
+                    db.updateProfile(age, city, url, req.session.userId).then(
+                        () => {
+                            res.redirect("/profile/edit");
+                        }
+                    );
+                });
+            })
+            .catch((err) => console.log(err));
+    } else {
+        db.updateUser(fname, lname, email, req.session.userId)
+            .then(() => {
+                db.updateProfile(age, city, url, req.session.userId).then(
+                    () => {
+                        res.redirect("/profile/edit");
+                    }
+                );
+            })
+            .catch((err) => console.log(err));
+    }
 });
 
 app.use((req, res, next) => {
@@ -261,6 +281,7 @@ app.listen(process.env.PORT || 8080, () =>
 // ** HANDL ERRORS ON: **
 //      -login
 //      -register
+//   -- render an error msg to the user --
 //
-// ** SERVER SIDE VALIDATION **
+// ** SERVER SIDE VALIDATION **// url field
 // ** CLIENT SIDE VALIDATION **
