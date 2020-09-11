@@ -229,7 +229,6 @@ app.post("/petition", (req, res) => {
 
 app.get("/profile/edit", (req, res) => {
     db.getUserInfo(req.session.userId).then(({ rows }) => {
-        console.log(rows);
         res.render("edit", {
             layout: "index",
             rows,
@@ -237,14 +236,18 @@ app.get("/profile/edit", (req, res) => {
     });
 });
 
-// app.post("/profile/edit", (req, res) => {
-//     const { first, last, email } = req.body;
-//     db.updateUsersTable(first, last, email, req.session.userId).then(() => {
-//         res.redirect("profile", {
-//             layout: "index",
-//         });
-//     });
-// });
+app.post("/profile/edit", (req, res) => {
+    const { fname, lname, email, age, city, url } = req.body;
+    // const{first, last, email}
+    console.log("werwrwrwre", fname, lname, email);
+    db.updateUser(fname, lname, email, req.session.userId)
+        .then(() => {
+            db.updateProfile(age, city, url, req.session.userId).then(() => {
+                res.redirect("/profile/edit");
+            });
+        })
+        .catch((err) => console.log(err));
+});
 
 app.use((req, res, next) => {
     res.status(404).send("Unable to find the requested resource!");

@@ -49,13 +49,6 @@ module.exports.getUser = (id) => {
     return db.query(`SELECT first, last FROM users WHERE id = $1`, [id]);
 };
 
-module.exports.insertProfile = (age, city, url, userId) => {
-    return db.query(
-        `INSERT INTO user_profiles (age, city, url, user_id) VALUES ($1, $2, $3, $4)`,
-        [age || null, city || null, url || null, userId]
-    );
-};
-
 module.exports.isSigned = (user_id) => {
     return db.query(`SELECT id FROM signatures where user_id = $1`, [user_id]);
 };
@@ -83,7 +76,7 @@ module.exports.getUserInfo = (id) => {
     );
 };
 
-module.exports.updateUsersTable = (first, last, email, id) => {
+module.exports.updateUser = (first, last, email, id) => {
     return db.query(
         `UPDATE users
          SET first = $1, last = $2, email = $3
@@ -99,6 +92,17 @@ module.exports.updateProfile = (age, city, url, user_id) => {
         on conflict (user_id)
         DO UPDATE set age = $1, city = $2, url = $3; 
     `,
-        [age, city, url, user_id]
+        [age || null, city || null, url || null, user_id]
     );
 };
+
+// module.exports.updateUser = ()
+
+// module.exports.insertProfile = (age, city, url, userId) => {
+//     return db.query(
+//         `INSERT INTO user_profiles (age, city, url, user_id) VALUES ($1, $2, $3, $4)`,
+//         [age || null, city || null, url || null, userId]
+//     );
+// };
+
+// UPDATE users set first = 'james', last = 'boned', email = 'boned@gmail.com' where id = 1
