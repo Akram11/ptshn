@@ -74,14 +74,14 @@ app.get("/profile", (req, res) => {
             layout: "index",
         });
     } else {
-        res.redirect("register");
+        res.redirect("/register");
     }
 });
 
 app.post("/profile", (req, res) => {
     const { city, age, url } = req.body;
     console.log(req.session.userId, city, age, url);
-    db.insertProfile(age, city, url, req.session.userId)
+    db.updateProfile(age, city, url, req.session.userId)
         .then(() => {
             res.redirect("/petition");
         })
@@ -229,12 +229,22 @@ app.post("/petition", (req, res) => {
 
 app.get("/profile/edit", (req, res) => {
     db.getUserInfo(req.session.userId).then(({ rows }) => {
+        console.log(rows);
         res.render("edit", {
             layout: "index",
             rows,
         });
     });
 });
+
+// app.post("/profile/edit", (req, res) => {
+//     const { first, last, email } = req.body;
+//     db.updateUsersTable(first, last, email, req.session.userId).then(() => {
+//         res.redirect("profile", {
+//             layout: "index",
+//         });
+//     });
+// });
 
 app.use((req, res, next) => {
     res.status(404).send("Unable to find the requested resource!");

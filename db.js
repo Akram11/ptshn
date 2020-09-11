@@ -51,7 +51,7 @@ module.exports.getUser = (id) => {
 
 module.exports.insertProfile = (age, city, url, userId) => {
     return db.query(
-        `INSERT INTO user_profiles (age, city, url, user_id) VALUES ($1, $2, $3, $4) returning id`,
+        `INSERT INTO user_profiles (age, city, url, user_id) VALUES ($1, $2, $3, $4)`,
         [age || null, city || null, url || null, userId]
     );
 };
@@ -74,8 +74,31 @@ module.exports.getUsersByCity = (city) => {
 
 module.exports.getUserInfo = (id) => {
     return db.query(
-        `SELECT users.first, users.last, users.email, user_profiles.city, user_profiles.age, user_profiles.url from users join user_profiles on users.id = user_profiles.user_id
-WHERE users.id = $1`,
+        `SELECT *
+         FROM users JOIN
+         user_profiles ON
+         users.id = user_profiles.user_id
+         WHERE users.id = $1`,
         [id]
+    );
+};
+
+module.exports.updateUsersTable = (first, last, email, id) => {
+    return db.query(
+        `UPDATE users
+         SET first = $1, last = $2, email = $3
+         WHERE id = $4`,
+        [first, last, email, id]
+    );
+};
+
+module.exports.updateProfile = (age, city, url, user_id) => {
+    return db.query(
+        `INSERT INTO user_profiles (age, city, url, user_id)
+        values ($1, $2, $3, $4)
+        on conflict (user_id)
+        DO UPDATE set age = $1, city = $2, url = $3; 
+    `,
+        [age, city, url, user_id]
     );
 };
