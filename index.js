@@ -227,14 +227,18 @@ app.post("/petition", (req, res) => {
         });
 });
 
-// app.get("/city/:id", (res, req) => {
-//     // res.end(req.params.city);~
-//     console.log(req.params);
-// });
+app.get("/profile/edit", (req, res) => {
+    db.getUserInfo(req.session.userId).then(({ rows }) => {
+        res.render("edit", {
+            layout: "index",
+            rows,
+        });
+    });
+});
 
-// app.use((req, res, next) => {
-//     res.status(404).send("Unable to find the requested resource!");
-// });
+app.use((req, res, next) => {
+    res.status(404).send("Unable to find the requested resource!");
+});
 
 app.listen(process.env.PORT || 8080, () =>
     console.log("Server is listening ....")

@@ -72,4 +72,10 @@ module.exports.getUsersByCity = (city) => {
     );
 };
 
-// select users.id, users.first, users.last, user_profiles.city, user_profiles.age, user_profiles.url, user_profiles.user_id, signatures.user_id as sigid from users join signatures on users.id = signatures.user_id left JOIN user_profiles on users.id = user_profiles.user_id;
+module.exports.getUserInfo = (id) => {
+    return db.query(
+        `SELECT users.first, users.last, users.email, user_profiles.city, user_profiles.age, user_profiles.url from users join user_profiles on users.id = user_profiles.user_id
+WHERE users.id = $1`,
+        [id]
+    );
+};
