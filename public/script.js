@@ -9,6 +9,7 @@ canvas.addEventListener("mousedown", function (e) {
 canvas.addEventListener("mousemove", function (e) {
     doDrawing(e);
 });
+
 canvas.addEventListener("mouseup", endDrawing);
 canvas.addEventListener("mouseleave", endDrawing);
 
@@ -23,11 +24,9 @@ function doDrawing(e) {
         ctx.strokeStyle = "black";
         ctx.lineTo(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop);
         ctx.lineWidth = 3;
-
         ctx.stroke();
     }
 }
-
 function endDrawing() {
     drawing = false;
     $("#signature").val(canvas.toDataURL());

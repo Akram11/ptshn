@@ -69,7 +69,6 @@ app.get("/register", (req, res) => {
 });
 
 app.get("/profile", (req, res) => {
-    console.log("insideprofile", req.session.signed);
     if (req.session.userId) {
         res.render("profile", {
             layout: "index",
