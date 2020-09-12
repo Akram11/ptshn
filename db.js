@@ -108,9 +108,17 @@ module.exports.updateProfile = (age, city, url, user_id) => {
         `INSERT INTO user_profiles (age, city, url, user_id)
         values ($1, $2, $3, $4)
         on conflict (user_id)
-        DO UPDATE set age = $1, city = $2, url = $3; 
+        DO UPDATE set age = $1, city = $2, url = $3 
     `,
         [age || null, city || null, url || null, user_id]
+    );
+};
+
+module.exports.deleteSig = (user_id) => {
+    return db.query(
+        `
+        DELETE FROM signatures where user_id = $1`,
+        [user_id]
     );
 };
 

@@ -269,6 +269,15 @@ app.post("/profile/edit", (req, res) => {
     }
 });
 
+app.post("/thanks", (req, res) => {
+    db.deleteSig(req.session.userId)
+        .then(() => {
+            req.session.signed = false;
+            res.redirect(`/profile`);
+        })
+        .catch((err) => console.log(err));
+});
+
 app.use((req, res, next) => {
     res.status(404).send("Unable to find the requested resource!");
 });

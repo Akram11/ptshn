@@ -2,4 +2,8 @@
     <p>THANKS FOR SIGNING UP {{signer/fname}} </p>
     <img src="{{signer/signature}}" alt="signature">
     <a href="/signers"> check {{total}}the signers so far</a>
+    <form method="post">
+        <button type="submit" class="delete">DELETE SIGNATURE</button>
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+    </form>
 </div>
