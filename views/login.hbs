@@ -1,10 +1,15 @@
-<form method="post">
-    <label for="email">E-mail address</label>
-    <input type="email" name="email" placeholder="mark@example.com" required>
+<section class="main">
+    <section class="sct welcom">
+        <h1>Welcome to PtshN</h1>
 
-    <label for="pwd">Password</label>
-    <input type="password" name="pwd" required>
+    </section>
 
-    <button type="submit" class="submit" value="submit">login</button>
-    <input type="hidden" name="_csrf" value="{{csrfToken}}">
-</form>
+    <form class='form-box' method="post">
+        <p class='form-text'>LOG IN</p>
+        <input type="email" name="email" placeholder="mark@example.com" required>
+        <input type="password" placeholder="password" name="pwd" required>
+        <button type="submit" class="submit" value="submit">login</button>
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+    </form>
+
+</section>

@@ -1,19 +1,27 @@
-<form method="post">
-    <label for="fname">First Name</label>
-    <input type="text" name="fname" autofocus required pattern="[A-Za-z]+">
+<section class="main">
+    <section class="sct welcom">
+        <h1>Welcome to PtshN</h1>
 
-    <label for="lname">Last Name</label>
-    {{!-- /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>
+    </section>
+
+
+    <form class='form-box' method="post">
+        <p class='form-text'>create an account</p>
+
+        <input type="text" placeholder='First Name' name="fname" autofocus required pattern="[A-Za-z]+">
+
+        {{!-- /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>
             ()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/ --}}
-    <input type="text" name="lname" required pattern="[A-Za-z]+">
+        <input type="text" placeholder='Last Name' name="lname" required pattern="[A-Za-z]+">
 
-    <label for="email">E-mail address</label>
-    <input type="email" name="email" placeholder="mark@example.com" required>
 
-    <label for="pwd">Password</label>
-    <input type="password" name="pwd" minlength="6" required>
+        <input type="email" name="email" placeholder="example@domain.com" required>
 
-    <button type="submit" class="submit" value="submit">Register</button>
-    <a href="/login">Alreardy have an acccount? login</a>
-    <input type="hidden" name="_csrf" value="{{csrfToken}}">
-</form>
+
+        <input type="password" placeholder='Password' name="pwd" minlength="6" required>
+
+        <button type="submit" class="submit" value="submit">CREATE</button>
+        <a class="log" href="/login">Alreardy have an acccount? Login</a>
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+    </form>
+</section>
