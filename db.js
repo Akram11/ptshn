@@ -115,11 +115,15 @@ module.exports.updateProfile = (age, city, url, user_id) => {
 };
 
 module.exports.deleteSig = (user_id) => {
-    return db.query(
-        `
-        DELETE FROM signatures where user_id = $1`,
-        [user_id]
-    );
+    return db.query(`DELETE FROM signatures where user_id = $1`, [user_id]);
+};
+
+module.exports.deleteUser = (user_id) => {
+    return db.query(` DELETE FROM users where id = $1`, [user_id]);
+};
+
+module.exports.deleteProfile = (user_id) => {
+    return db.query(`DELETE FROM user_profiles where user_id = $1`, [user_id]);
 };
 
 //*********************** TODO********************************

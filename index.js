@@ -228,12 +228,16 @@ app.post("/petition", (req, res) => {
 });
 
 app.get("/profile/edit", (req, res) => {
-    db.getUserInfo(req.session.userId).then(({ rows }) => {
-        res.render("edit", {
-            layout: "index",
-            rows,
+    if (!req.session.userId) {
+        res.redirect("/register");
+    } else {
+        db.getUserInfo(req.session.userId).then(({ rows }) => {
+            res.render("edit", {
+                layout: "index",
+                rows,
+            });
         });
-    });
+    }
 });
 
 app.post("/profile/edit", (req, res) => {
@@ -273,7 +277,25 @@ app.post("/thanks", (req, res) => {
     db.deleteSig(req.session.userId)
         .then(() => {
             req.session.signed = false;
-            res.redirect(`/profile`);
+            res.redirect(`/petition`);
+        })
+        .catch((err) => console.log(err));
+});
+
+app.get("/logout", (req, res) => {
+    req.session = null;
+    res.redirect("/register");
+});
+
+app.get("/delete", (req, res) => {
+    db.deleteSig(req.session.userId)
+        .then(() => {
+            db.deleteProfile(req.session.userId).then(() => {
+                db.deleteUser(req.session.userId).then(() => {
+                    req.session = null;
+                    res.redirect("/register");
+                });
+            });
         })
         .catch((err) => console.log(err));
 });

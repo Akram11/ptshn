@@ -28,34 +28,6 @@
 
         <input type="hidden" name="_csrf" value="{{csrfToken}}">
         <button type="submit" class="submit" value="submit">update</button>
+        <a href="/delete" class="delete">DELETE PROFILE</a>
     </form>
 </div>
-{{!-- {{#rows}}
-<form method="post">
-    <label for="fname">First Name</label>
-    <input type="text" name="fname" autofocus value="{{first}}" pattern="[A-Za-z]+">
-
-    <label for="lname">Last Name</label>
-    <input type="text" name="lname" value="{{last}}" pattern="[A-Za-z]+">
-
-    <label for="email">E-mail address</label>
-    <input type="email" name="email" value="{{email}}">
-
-    <label for="pwd">Password</label>
-    <input type="password" name="pwd" minlength="6">
-
-    <label for="age">Age</label>
-    <input type="number" name="age" max="130" min="13" value="{{age}}">
-
-
-    <label for="city">City</label>
-    <input type="text" name="city" pattern="[A-Za-z]+" value="{{city}}">
-
-    <label for="url">Homepage</label>
-    <input type="url" name="url" value="{{url}}">
-
-
-    <button type="submit" class="submit" value="submit">continue</button>
-    <input type="hidden" name="_csrf" value="{{csrfToken}}">
-</form>
-{{/rows}} --}}
