@@ -1,18 +1,20 @@
-<section id="sign-form">
-    <form id="sign" method="POST">
+<section class="petition">
+    <section class="sct">
+        <h1>petition text</h1>
 
-        {{!-- <label for="fname">Enter your First name: </label>
-        <input type="text" name="fname" autofocus required pattern="[A-Za-z]+">
+    </section>
 
-        <label for="lname">Enter your Last name: </label>
-        <input type="text" name="lname" required pattern="[A-Za-z]+"> --}}
+
+    <form class="sign-box" method="POST">
 
         <input name="signature" id='signature' type='hidden' required="true">
-        <canvas id="canvas" width="500" height="150"></canvas>
+        <canvas id="canvas" width="600" height="150"></canvas>
+        <button id='clear' class="delete">CLEAR</button>
 
-        <button id="clear">clear</button>
-        <button type="submit" class="submit" value="submit">sign</button>
+        <button type="submit" class="submit" value="submit">SIGN</button>
         <input type="hidden" name="_csrf" value="{{csrfToken}}">
 
+
+    </form>
+
 </section>
-</form>

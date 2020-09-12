@@ -1,10 +1,17 @@
-<div>
-    <p>signers</p>
+<section class="signers">
+    <p class="sct">Signers</p>
+    <p class=" title-city">{{city}}</p>
     {{#each rows}}
     {{#if url}}
-    <div> <a href="{{url}}">{{first}} {{last}}</a> {{age}} <a href="/signers/{{city}}">{{city}}</a></div>
+    <div class="sig-row">
+        -<a class="link signer" href=" {{url}}">- {{first}} {{last}} </a> <span class="age">{{age}} </span>
+        <a class="link city" href="/signers/{{city}}">{{city}}</a>
+    </div>
     {{else}}
-    <p> {{first}} {{last}} {{age}} <a href="/city">{{city}}</a></p>
+    <div class="sig-row">
+        <p class="signer">- {{first}} {{last}} <span class="age">{{age}} </span></p>
+        <a class="link city" href="/city">{{city}}</a>
+    </div>
     {{/if}}
     {{/each}}
-</div>
+</section>

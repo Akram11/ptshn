@@ -172,7 +172,6 @@ app.get("/thanks", (req, res) => {
     } else {
         db.getSigTotal(req.session.userId)
             .then(({ rows }) => {
-                // console.log(req.session.userId, rows);
                 res.render("thanks", {
                     total: rows[0].total,
                     signer: {
@@ -211,6 +210,7 @@ app.get("/signers/:city", (res, req) => {
         res.res.render("signers", {
             layout: "index",
             rows,
+            city,
         });
     });
 });
@@ -316,3 +316,4 @@ app.listen(process.env.PORT || 8080, () =>
 //
 // ** SERVER SIDE VALIDATION **// url field
 // ** CLIENT SIDE VALIDATION **
+// STORE FNAME IN A COOKIE

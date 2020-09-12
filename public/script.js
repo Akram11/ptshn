@@ -21,7 +21,7 @@ function beginDrawing(e) {
 
 function doDrawing(e) {
     if (drawing) {
-        ctx.strokeStyle = "black";
+        ctx.strokeStyle = "#00b594";
         ctx.lineTo(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop);
         ctx.lineWidth = 3;
         ctx.stroke();

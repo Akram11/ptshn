@@ -1,13 +1,20 @@
-<form method="post">
-    <label for="age">Age</label>
-    <input type="number" name="age" value="" max="130" min="13">
+<section class="main">
+    <section class="sct">
+        <h1>Hi, Would you like to tell us about yourself?</h1>
 
+    </section>
 
-    <label for="city">City</label>
-    <input type="text" name="city" pattern="[A-Za-z]+">
+    <form method="post" class='form-box'>
+        <label for="age">How old you are?</label>
+        <input type="number" placeholder="18" name=" age" value="" max="130" min="13">
 
-    <label for="url">Homepage</label>
-    <input type="url" name="url" placeholder="https://example.com">
-    <button type="submit" class="submit" value="submit">continue</button>
-    <input type="hidden" name="_csrf" value="{{csrfToken}}">
-</form>
+        <label for="city">Where do you live?</label>
+        <input type="text" placeholder='Berlin' name="city">
+        <label for="url">Do you have a webpage?</label>
+        <input type="url" name="url" placeholder="https://example.com">
+
+        <button type="submit" class="submit" value="submit">GO TO PETITION</button>
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+    </form>
+
+</section>
