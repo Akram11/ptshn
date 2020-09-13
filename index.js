@@ -97,6 +97,7 @@ app.post("/profile", (req, res) => {
                 res.redirect("/petition");
             })
             .catch((err) => {
+                console.log(err);
                 res.render("profile", {
                     layout: "index",
                     msg: "something went wrong, please try again",
