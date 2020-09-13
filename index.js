@@ -80,7 +80,8 @@ app.get("/profile", (req, res) => {
 
 app.post("/profile", (req, res) => {
     const { city, age, url } = req.body;
-    console.log(req.session.userId, city, age, url);
+    console.log(req.body.age);
+    console.log("sssssss", req.session.userId, city, age, url);
     db.updateProfile(age, city, url, req.session.userId)
         .then(() => {
             res.redirect("/petition");
@@ -127,9 +128,7 @@ app.get("/login", (req, res) => {
 
 app.post("/login", (req, res) => {
     const { email, pwd } = req.body;
-    console.log(email);
     db.getUserEmail(email).then(({ rows }) => {
-        // console.log(rows[0].hash, email, password);
         if (rows.length === 0) {
             // return;
             //do something email doen't exist
@@ -192,7 +191,6 @@ app.get("/signers", (req, res) => {
     } else {
         db.getSignatures()
             .then(({ rows }) => {
-                console.log(rows);
                 res.render("signers", {
                     layout: "index",
                     rows,
@@ -206,7 +204,6 @@ app.get("/signers", (req, res) => {
 app.get("/signers/:city", (res, req) => {
     const city = req.req.params.city;
     db.getUsersByCity(city).then(({ rows }) => {
-        // console.log(rows);
         res.res.render("signers", {
             layout: "index",
             rows,
