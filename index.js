@@ -351,11 +351,9 @@ const isNotValidURL = (url) => {
     if (url.length == 0) {
         return false;
     } else if (
-        !url.startsWith("http://") ||
-        !url.startsWith("https://") ||
+        (!url.startsWith("http") && !url.startsWith("https")) ||
         url.includes(">") ||
-        url.includes("<") ||
-        url.includes(";")
+        url.includes("<")
     ) {
         return true;
     }
