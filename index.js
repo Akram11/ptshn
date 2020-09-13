@@ -301,7 +301,9 @@ app.get("/delete", (req, res) => {
 });
 
 app.use((req, res, next) => {
-    res.status(404).send("Unable to find the requested resource!");
+    res.status(404).render("lost", {
+        layout: "index",
+    });
 });
 
 app.listen(process.env.PORT || 8080, () =>
