@@ -9,15 +9,15 @@
         {{#rows}}
         <div>
             <label for="fname">First Name</label>
-            <input type="text" name="fname" autofocus value="{{first}}" pattern="[A-Za-z]+">
+            <input type="text" name="fname" autofocus required value="{{first}}" pattern="[A-Za-z]+">
         </div>
         <div>
             <label for="lname">Last Name</label>
-            <input type="text" name="lname" value="{{last}}" pattern="[A-Za-z]+">
+            <input type="text" name="lname" required value="{{last}}" pattern="[A-Za-z]+">
         </div>
         <div>
             <label for="email">E-mail address</label>
-            <input type="email" name="email" value="{{email}}">
+            <input type="email" name="email" required value="{{email}}">
         </div>
         <div>
             <label for="pwd">Password</label>
@@ -38,6 +38,7 @@
         </div>
         {{/rows}}
         <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <p class='warning-text'>{{msg}}</p>
         <button type="submit" class="submit" value="submit">update</button>
         <a href="/delete" class="submit delete">DELETE PROFILE</a>
     </form>

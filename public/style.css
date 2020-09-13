@@ -246,3 +246,8 @@ input {
 .signer-list {
     height: 100%;
 }
+
+.warning-text {
+    color: #eb0b30;
+    font-size: 18px;
+}

@@ -21,7 +21,7 @@ function beginDrawing(e) {
 
 function doDrawing(e) {
     if (drawing) {
-        ctx.strokeStyle = "#00b594";
+        ctx.strokeStyle = "#3d84a8";
         ctx.lineTo(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop);
         ctx.lineWidth = 3;
         ctx.stroke();
@@ -34,5 +34,7 @@ function endDrawing() {
 
 $("#clear").click((e) => {
     e.preventDefault();
+    $("#signature").attr("value", "");
+    console.log("sdfsfsfsfsfsf");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 });

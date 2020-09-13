@@ -14,7 +14,7 @@
         <input type="text" placeholder='Berlin' name="city">
         <label for="url">Do you have a webpage?</label>
         <input type="url" name="url" placeholder="starts only with http:// or https://">
-
+        <p class="warning-text">{{msg}}</p>
         <button type="submit" class="submit" value="submit">GO TO PETITION</button>
         <input type="hidden" name="_csrf" value="{{csrfToken}}">
     </form>

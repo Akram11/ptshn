@@ -68,7 +68,7 @@ app.get("/", (req, res) => {
 
 app.get("/register", (req, res) => {
     if (req.session.userId) {
-        res.redirect("/profile");
+        res.redirect("/petition");
     } else {
         res.render("register", {
             layout: "index",
@@ -85,39 +85,58 @@ app.get("/profile", (req, res) => {
 
 app.post("/profile", (req, res) => {
     const { city, age, url } = req.body;
-    db.updateProfile(age, city, url, req.session.userId)
-        .then(() => {
-            res.redirect("/petition");
-        })
-        .catch((err) => {
-            console.error(err);
+    if (isNotValidURL(url)) {
+        res.render("profile", {
+            layout: "index",
+            msg: "Invalid url, please try again",
+            name: req.session.name,
         });
+    } else {
+        db.updateProfile(age, city.trim(), url, req.session.userId)
+            .then(() => {
+                res.redirect("/petition");
+            })
+            .catch((err) => {
+                res.render("profile", {
+                    layout: "index",
+                    msg: "something went wrong, please try again",
+                    name: req.session.name,
+                });
+            });
+    }
 });
 
 app.post("/register", (req, res) => {
     const { fname, lname, email, pwd } = req.body;
-    bc.hash(pwd)
-        .then((hash) => {
-            db.addUser(fname, lname, email.toLowerCase(), hash)
-                .then(({ rows }) => {
-                    req.session.userId = rows[0].id;
-                    req.session.name = fname;
-                    res.redirect(`/profile`);
-                })
-                .catch((err) => {
-                    console.log(err);
-                    res.render("register", {
-                        layout: "index",
-                        msg: "somthing went wrong!",
-                    });
-                });
-        })
-        .catch((err) => {
-            res.render("register", {
-                layout: "index",
-            });
-            console.log(err);
+    if (isEmpty(fname, lname, email, pwd)) {
+        res.render("register", {
+            layout: "index",
+            msg: "something went wrong, please try again",
         });
+    } else {
+        bc.hash(pwd)
+            .then((hash) => {
+                db.addUser(fname, lname, email.toLowerCase(), hash)
+                    .then(({ rows }) => {
+                        req.session.userId = rows[0].id;
+                        req.session.name = fname;
+                        res.redirect(`/profile`);
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        res.render("register", {
+                            layout: "index",
+                            msg: "somthing went wrong!",
+                        });
+                    });
+            })
+            .catch((err) => {
+                res.render("register", {
+                    layout: "index",
+                });
+                console.log(err);
+            });
+    }
 });
 
 app.get("/login", (req, res) => {
@@ -216,6 +235,9 @@ app.get("/signers/:city", (res, req) => {
 
 app.post("/petition", (req, res) => {
     const { signature } = req.body;
+    if (signature === "") {
+        res.render("main", { layout: "index", msg: "signature is required" });
+    }
     db.addSignature(signature, req.session.userId)
         .then(() => {
             req.session.signed = true;
@@ -227,48 +249,57 @@ app.post("/petition", (req, res) => {
 });
 
 app.get("/profile/edit", (req, res) => {
-    if (!req.session.userId) {
-        res.redirect("/register");
-    } else {
-        db.getUserInfo(req.session.userId).then(({ rows }) => {
-            res.render("edit", {
-                layout: "index",
-                rows,
-            });
+    db.getUserInfo(req.session.userId).then(({ rows }) => {
+        res.render("edit", {
+            layout: "index",
+            rows,
         });
-    }
+    });
 });
 
 app.post("/profile/edit", (req, res) => {
     const { fname, lname, email, age, city, url, pwd } = req.body;
-    if (pwd) {
-        bc.hash(pwd)
-            .then((hash) => {
-                db.updateUserPwd(
-                    fname,
-                    lname,
-                    email,
-                    hash,
-                    req.session.userId
-                ).then(() => {
-                    db.updateProfile(age, city, url, req.session.userId).then(
-                        () => {
-                            res.redirect("/petition");
-                        }
-                    );
-                });
-            })
-            .catch((err) => console.log(err));
+    if (isNotValidURL(url) || isEmpty(fname, lname, email)) {
+        res.redirect("/profile/edit");
     } else {
-        db.updateUser(fname, lname, email, req.session.userId)
-            .then(() => {
-                db.updateProfile(age, city, url, req.session.userId).then(
-                    () => {
+        if (pwd) {
+            bc.hash(pwd)
+                .then((hash) => {
+                    db.updateUserPwd(
+                        fname,
+                        lname,
+                        email,
+                        hash,
+                        req.session.userId
+                    ).then(() => {
+                        db.updateProfile(
+                            age,
+                            city.toLowerCase(),
+                            url,
+                            req.session.userId
+                        ).then(() => {
+                            res.redirect("/petition");
+                        });
+                    });
+                })
+                .catch((err) => console.log(err));
+        } else {
+            db.updateUser(fname, lname, email, req.session.userId)
+                .then(() => {
+                    db.updateProfile(
+                        age,
+                        city.toLowerCase(),
+                        url,
+                        req.session.userId
+                    ).then(() => {
                         res.redirect("/petition");
-                    }
-                );
-            })
-            .catch((err) => console.log(err));
+                    });
+                })
+                .catch((err) => {
+                    console.err(err);
+                    res.redirect("/profile/edit");
+                });
+        }
     }
 });
 
@@ -314,6 +345,24 @@ app.use((req, res, next) => {
 app.listen(process.env.PORT || 8080, () =>
     console.log("Server is listening ....")
 );
+
+const isNotValidURL = (url) => {
+    if (url.length == 0) {
+        return false;
+    } else if (
+        !url.startsWith("http://") ||
+        !url.startsWith("https://") ||
+        url.includes(">") ||
+        url.includes("<") ||
+        url.includes(";")
+    ) {
+        return true;
+    }
+};
+
+const isEmpty = (...args) => {
+    return args.includes("");
+};
 
 //  TODO //////////////////////////////////////////////////////////////////
 // ** HANDL ERRORS ON: **
