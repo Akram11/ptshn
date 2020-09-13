@@ -72,6 +72,7 @@ app.get("/profile", (req, res) => {
     if (req.session.userId) {
         res.render("profile", {
             layout: "index",
+            name: req.session.name,
         });
     } else {
         res.redirect("/register");
@@ -80,8 +81,6 @@ app.get("/profile", (req, res) => {
 
 app.post("/profile", (req, res) => {
     const { city, age, url } = req.body;
-    console.log(req.body.age);
-    console.log("sssssss", req.session.userId, city, age, url);
     db.updateProfile(age, city, url, req.session.userId)
         .then(() => {
             res.redirect("/petition");
@@ -98,6 +97,7 @@ app.post("/register", (req, res) => {
             db.addUser(fname, lname, email.toLowerCase(), hash)
                 .then(({ rows }) => {
                     req.session.userId = rows[0].id;
+                    req.session.name = fname;
                     res.redirect(`/profile`);
                 })
                 .catch((err) => {
@@ -147,8 +147,7 @@ app.post("/login", (req, res) => {
                     req.session.userId = rows[0].id;
                     db.isSigned(req.session.userId).then(({ rows }) => {
                         req.session.signed = rows.length == 0 ? false : true;
-                        console.log(":req.session.signed", req.session.signed);
-                        res.redirect(`/profile`);
+                        res.redirect(`/petition`);
                     });
                     //do a query to check if the user has signed
                 }
@@ -186,7 +185,7 @@ app.get("/thanks", (req, res) => {
 });
 
 app.get("/signers", (req, res) => {
-    if (!req.session.userId) {
+    if (!req.session.userId || !req.session.signed) {
         res.redirect("/petition");
     } else {
         db.getSignatures()
@@ -203,13 +202,17 @@ app.get("/signers", (req, res) => {
 });
 app.get("/signers/:city", (res, req) => {
     const city = req.req.params.city;
-    db.getUsersByCity(city).then(({ rows }) => {
-        res.res.render("signers", {
-            layout: "index",
-            rows,
-            city,
+    if (!req.req.session.userId || !req.req.session.signed) {
+        res.res.redirect("/petition");
+    } else {
+        db.getUsersByCity(city).then(({ rows }) => {
+            res.res.render("signers", {
+                layout: "index",
+                rows,
+                city,
+            });
         });
-    });
+    }
 });
 
 app.post("/petition", (req, res) => {
@@ -295,6 +298,12 @@ app.get("/delete", (req, res) => {
             });
         })
         .catch((err) => console.log(err));
+});
+
+app.get("/how-does-it-work", (req, res) => {
+    res.render("work", {
+        layout: "index",
+    });
 });
 
 app.use((req, res, next) => {

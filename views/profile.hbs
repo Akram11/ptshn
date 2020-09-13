@@ -1,6 +1,8 @@
+<header id="bar">{{> header petition=true logout=true}}</header>
+
 <section class="main">
     <section class="sct">
-        <h1>Hi, Would you like to tell us about yourself?</h1>
+        <h1>Hi {{name}}, Would you like to tell us about yourself?</h1>
 
     </section>
 
@@ -16,5 +18,4 @@
         <button type="submit" class="submit" value="submit">GO TO PETITION</button>
         <input type="hidden" name="_csrf" value="{{csrfToken}}">
     </form>
-
 </section>
