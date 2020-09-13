@@ -1,11 +1,11 @@
-<header id="bar">{{> header work=true signaners=true petition=true logout=true}}</header>
-
+<header id="bar">{{>header work=true petition=true signers=true profile=true logout=true}}</header>
 <section class="signers">
     <p class="sct">Signers</p>
     <p class=" title-city">{{city}}</p>
     <div class="signer-list">
         {{#each rows}}
         {{#if url}}
+
         <div class="sig-row">
             <a class="link signer" href=" {{url}}">- {{first}} {{last}} </a> <span class="age">{{age}} </span>
             <a class="link city" href="/signers/{{city}}">{{city}}</a>
@@ -13,7 +13,7 @@
         {{else}}
         <div class="sig-row">
             <span class="signer">- {{first}} {{last}} <span class="age">{{age}} </span></span>
-            <a class="link city" href="/city">{{city}}</a>
+            <a class="link city" href="/signers/{{city}}">{{city}}</a>
         </div>
         {{/if}}
         {{/each}}

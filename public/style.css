@@ -186,6 +186,12 @@ input {
     display: inline;
 }
 
+.register {
+    /* color: #00adb5; */
+    text-decoration: none;
+    display: inline;
+}
+
 .link:hover {
     color: #00b594;
     text-decoration: underline;

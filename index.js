@@ -54,6 +54,14 @@ app.use(express.static("./public"));
 //         next();
 //     }
 // };
+
+app.use((req, res, next) => {
+    if (!req.session.userId && req.url != "/login" && req.url != "/register") {
+        res.redirect("/register");
+    } else {
+        next();
+    }
+});
 app.get("/", (req, res) => {
     res.redirect("/petition");
 });
@@ -69,14 +77,10 @@ app.get("/register", (req, res) => {
 });
 
 app.get("/profile", (req, res) => {
-    if (req.session.userId) {
-        res.render("profile", {
-            layout: "index",
-            name: req.session.name,
-        });
-    } else {
-        res.redirect("/register");
-    }
+    res.render("profile", {
+        layout: "index",
+        name: req.session.name,
+    });
 });
 
 app.post("/profile", (req, res) => {
@@ -130,8 +134,6 @@ app.post("/login", (req, res) => {
     const { email, pwd } = req.body;
     db.getUserEmail(email).then(({ rows }) => {
         if (rows.length === 0) {
-            // return;
-            //do something email doen't exist
             res.render("login", {
                 layout: "index",
                 msg: "user doesn't exist",
@@ -149,7 +151,6 @@ app.post("/login", (req, res) => {
                         req.session.signed = rows.length == 0 ? false : true;
                         res.redirect(`/petition`);
                     });
-                    //do a query to check if the user has signed
                 }
             });
         }
@@ -157,15 +158,13 @@ app.post("/login", (req, res) => {
 });
 
 app.get("/petition", (req, res) => {
-    req.session.userId
-        ? req.session.signed
-            ? res.redirect("/thanks")
-            : res.render("main", { layout: "index" })
-        : res.redirect("/register");
+    req.session.signed
+        ? res.redirect("/thanks")
+        : res.render("main", { layout: "index" });
 });
 
 app.get("/thanks", (req, res) => {
-    if (!req.session.userId) {
+    if (!req.session.signed) {
         res.redirect("/petition");
     } else {
         db.getSigTotal(req.session.userId)
@@ -254,7 +253,7 @@ app.post("/profile/edit", (req, res) => {
                 ).then(() => {
                     db.updateProfile(age, city, url, req.session.userId).then(
                         () => {
-                            res.redirect("/profile/edit");
+                            res.redirect("/petition");
                         }
                     );
                 });
@@ -265,7 +264,7 @@ app.post("/profile/edit", (req, res) => {
             .then(() => {
                 db.updateProfile(age, city, url, req.session.userId).then(
                     () => {
-                        res.redirect("/profile/edit");
+                        res.redirect("/petition");
                     }
                 );
             })
@@ -324,4 +323,3 @@ app.listen(process.env.PORT || 8080, () =>
 //
 // ** SERVER SIDE VALIDATION **// url field
 // ** CLIENT SIDE VALIDATION **
-// STORE FNAME IN A COOKIE
