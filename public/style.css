@@ -134,7 +134,9 @@ canvas {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    padding-top: 100px;
+    padding-top: 30px;
+    height: 100%;
+    background-color: #393e46;
 }
 
 .form-text {
@@ -181,6 +183,7 @@ input {
 .link {
     color: #00adb5;
     text-decoration: none;
+    display: inline;
 }
 
 .link:hover {
@@ -201,11 +204,12 @@ input {
 .city {
     font-size: 28px;
     text-transform: uppercase;
+    display: inline;
 }
 
 .sig-row {
-    width: 400px;
-    padding: 18px;
+    width: 600px;
+    padding: 10px;
     background-color: #222831;
 }
 
@@ -231,4 +235,8 @@ input {
     margin-right: 0px;
     margin-top: 3px;
     height: 5px;
+}
+
+.signer-list {
+    height: 100%;
 }
